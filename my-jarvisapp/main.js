@@ -3,6 +3,8 @@ const path = require('path');
 const { exec } = require('child_process');
 const axios = require('axios');
 
+let flaskProcess;
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 800,
@@ -13,6 +15,12 @@ function createWindow() {
   });
 
   win.loadFile(path.join(__dirname, 'dist', 'index.html'));
+
+  win.on('closed', () => {
+    if (flaskProcess) {
+      flaskProcess.kill('SIGINT');
+    }
+  });
 }
 
 function startFlaskServer() {
@@ -22,7 +30,7 @@ function startFlaskServer() {
 
     console.log(`Starting Flask server at: ${scriptPath} with Python interpreter: ${pythonPath}`);
 
-    const flaskProcess = exec(`${pythonPath} ${scriptPath}`, (error, stdout, stderr) => {
+    flaskProcess = exec(`${pythonPath} ${scriptPath}`, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error starting Flask server: ${error.message}`);
         reject(error);
@@ -65,6 +73,9 @@ app.whenReady().then(async () => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    if (flaskProcess) {
+      flaskProcess.kill('SIGINT');
+    }
     app.quit();
   }
 });

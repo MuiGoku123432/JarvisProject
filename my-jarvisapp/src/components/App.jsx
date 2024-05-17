@@ -14,7 +14,12 @@ const App = () => {
       });
   }, []);
 
-  return <h1>{message}</h1>;
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold underline">{message}</h1>
+      <button className="btn btn-primary mt-4">DaisyUI Button</button>
+    </div>
+  );
 };
 
 export default App;
