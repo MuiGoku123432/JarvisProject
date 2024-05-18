@@ -1,0 +1,151 @@
+
+#File Structure
+my-jarvis-app/
+├── venv/                            # Python virtual environment
+│   └── ...                          # Virtual environment files
+├── src/
+│   ├── python/
+│   │   └── app.py                   # Flask server script
+│   ├── components/
+│   │   └── App.jsx                  # React component
+│   ├── index.css                    # CSS file for Tailwind
+│   ├── index.jsx                    # React entry point
+├── dist/
+│   └── index.html                   # HTML template
+├── main.js                          # Electron main process
+├── preload.js                       # Preload script for Electron
+├── package.json                     # NPM configuration
+├── webpack.config.js                # Webpack configuration
+└── .babelrc                         # Babel configuration
+
+
+#Pseudo Code 
+Pseudocode Rules
+To ensure clear and consistent communication, here are some rules for writing and interpreting pseudocode for our project:
+
+General Structure
+    File Operations:
+        Create/Update File:
+        [Create/Update] file: /path/to/file
+        - Description of the content or purpose of the file
+        Create/Update Directory:
+        [Create/Update] directory: /path/to/directory
+        - List of files or subdirectories it contains
+    Code Blocks:
+        Define Flask Endpoint:
+            Define Flask endpoint: /endpoint-name [HTTP method]
+            - Description of the endpoint’s function
+            - Description of actions performed within the endpoint
+            - Description of the response returned
+        Define/Update React Component:
+            Define/Update React component: ComponentName
+            - Import statements
+            - State variables definition
+            - Effect hooks definition
+            - Event handlers definition
+            - Component rendering description
+        Function Definition:
+            Define function: functionName
+            - Parameters: param1, param2, ...
+            - Description of actions performed by the function
+            - Return value
+    Actions
+        Set State:
+            Set state: variableName = value
+        Make HTTP Request:
+            Make HTTP request: [GET/POST] /endpoint
+            - On success: describe actions performed on success
+            - On failure: describe error handling
+        Console Log:
+            Console log: message
+        Conditional Statement:
+            If condition:
+            - Action if condition is true
+            Else:
+            - Action if condition is false
+
+
+#Psuedo Code Exapmles
+
+Update Flask endpoint: /toggle-color [POST]
+  - Check current background color
+  - Toggle color between 'white' and 'blue'
+  - Print log message with new color
+  - Return JSON response with new color
+
+Update React component: App
+  - Import React, useState, useEffect, axios
+  - Define state: message, bgColor
+  - Define effect: fetch initial message from /say-hello
+  - Define handler: handleButtonClick
+    - Make POST request to /toggle-color
+    - On success: Set state bgColor = response.data.color
+    - On failure: Console log error
+  - Render component with button to toggle color
+
+#Implementation Based on Pseudo Code:
+
+    # Update Flask endpoint: /toggle-color [POST]
+    #   - Check current background color
+    #   - Toggle color between 'white' and 'blue'
+    #   - Print log message with new color
+    #   - Return JSON response with new color
+
+    @app.route("/toggle-color", methods=["POST"])
+    def toggle_color():
+        global current_color
+        new_color = "white" if current_color != "white" else "blue"
+        current_color = new_color
+        print(f"Button was clicked, changing color to {new_color}")
+        return jsonify(message=f"Color changed to {new_color}", color=new_color)
+
+    // Update React component: App
+    //   - Import React, useState, useEffect, axios
+    //   - Define state: message, bgColor
+    //   - Define effect: fetch initial message from /say-hello
+    //   - Define handler: handleButtonClick
+    //     - Make POST request to /toggle-color
+    //     - On success: Set state bgColor = response.data.color
+    //     - On failure: Console log error
+    //   - Render component with button to toggle color
+
+    import React, { useState, useEffect } from 'react';
+    import axios from 'axios';
+
+    const App = () => {
+    const [message, setMessage] = useState('');
+    const [bgColor, setBgColor] = useState('');
+
+    useEffect(() => {
+        axios.get('http://localhost:5000/say-hello')
+        .then(response => {
+            setMessage(response.data.message);
+        })
+        .catch(error => {
+            console.error('There was an error making the request!', error);
+        });
+    }, []);
+
+    const handleButtonClick = () => {
+        axios.post('http://localhost:5000/toggle-color')
+        .then(response => {
+            console.log(response.data.message);
+            setBgColor(response.data.color);
+        })
+        .catch(error => {
+            console.error('There was an error making the request!', error);
+        });
+    };
+
+    return (
+        <div className="container mx-auto p-4" style={{ backgroundColor: bgColor }}>
+        <h1 className="text-3xl font-bold underline">{message}</h1>
+        <button className="btn btn-primary mt-4" onClick={handleButtonClick}>Toggle Background Color</button>
+        </div>
+    );
+    };
+
+    export default App;
+
+
+

@@ -18,8 +18,8 @@ const App = () => {
   const handleClick = () => {
     axios.post('http://localhost:5000/button-clicked')
       .then(response => {
-        setMessage(response.data.message);
-        setBgColor(response.data.color)
+        //console.log(response.data.message);
+        setBgColor(response.data.color); // Set the background color to the value returned by the server
       })
       .catch(error => {
         console.error('There was an error making the request!', error);
@@ -29,7 +29,7 @@ const App = () => {
   return (
      <div className="container mx-auto p-4" style={{ backgroundColor: bgColor }}>
       <h1 className="text-3xl font-bold underline">{message}</h1>
-      <button className="btn btn-primary mt-4" onClick={handleClick}>Change Background to White</button>
+      <button className="btn btn-primary mt-4" onClick={handleClick}>Toggles Background</button>
     </div>
   );
 };
